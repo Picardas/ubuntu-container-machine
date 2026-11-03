@@ -28,7 +28,5 @@ RUN systemctl mask \
       systemd-update-utmp.service \
       systemd-tmpfiles-setup.service \
       console-getty.service
-RUN systemctl disable \
-      networkd-dispatcher.service
 
 RUN sed -i -e 's/^AcceptEnv LANG LC_\*$/#AcceptEnv LANG LC_*/' /etc/ssh/sshd_config
