@@ -10,7 +10,7 @@ RUN apt-get update && \
     yes | unminimize
 
 RUN apt-get update && \
-    apt-get install -y git && \
+    apt-get install -y git netcat-openbsd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -30,3 +30,5 @@ RUN systemctl mask \
       console-getty.service
 
 RUN sed -i -e 's/^AcceptEnv LANG LC_\*$/#AcceptEnv LANG LC_*/' /etc/ssh/sshd_config
+
+RUN printf 'SetEnv SSH_AUTH_SOCK=/var/host-services/ssh-auth.sock\n' > /etc/ssh/sshd_config.d/10-host-agent.conf
