@@ -29,6 +29,9 @@ RUN systemctl mask \
       systemd-tmpfiles-setup.service \
       console-getty.service
 
+# start sshd at boot so /run/sshd exists (tmpfiles-setup, which normally creates it, is masked)
+RUN systemctl enable ssh.service
+
 RUN sed -i -e 's/^AcceptEnv LANG LC_\*$/#AcceptEnv LANG LC_*/' /etc/ssh/sshd_config
 
 RUN printf 'SetEnv SSH_AUTH_SOCK=/var/host-services/ssh-auth.sock\n' > /etc/ssh/sshd_config.d/10-host-agent.conf

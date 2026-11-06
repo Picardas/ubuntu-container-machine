@@ -13,10 +13,18 @@ For private repositories: `container registry login ghcr.io -u <username>`.
 ```bash
 container system start
 container machine create ghcr.io/<username>/ubuntu-machine:latest --name ubuntu
-container machine run -n ubuntu -it -- bash -l
 ```
 
-- `-it` and `-- bash -l` provide a login shell.
+To set as the default and run
+```bash
+container machine set-default ubuntu
+container machine run
+```
+
+Or to run without setting it as the default
+```bash
+container m run -n ubuntu
+```
 
 ## Connect over SSH
 
@@ -24,7 +32,7 @@ The IP address of the Container Machine is set by macOS virtual DHCP client and 
 
 ```
 Host ubuntu
-	User <you>
+	User <macuser>
 	IdentityFile ~/.ssh/id_ed25519_dev
 	IdentitiesOnly yes
 	ProxyCommand container machine run -n ubuntu -i --root -- /usr/sbin/sshd -i
@@ -36,7 +44,7 @@ Host ubuntu
 ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519_dev -C "ContainerMachine"
 # inside the machine:
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
-cat /Users/<you>/.ssh/id_ed25519_dev.pub >> ~/.ssh/authorized_keys
+cat /Users/<macuser>/.ssh/id_ed25519_dev.pub >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ```
 
@@ -53,7 +61,7 @@ container machine rm ubuntu        # deletes the machine's storage, including /h
 container stop --all
 container delete --all --force
 container image delete --all
-container builder stop && container builder delete --force
+container builder delete --force 2>/dev/null || true
 container volume delete --all
 container network delete --all
 ```
